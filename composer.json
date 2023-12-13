@@ -1,0 +1,21 @@
+{
+    "name": "opencodeco/testcontainers",
+    "description": "Testcontainers is a PHP library that supports PHPUnit tests, providing lightweight, throwaway instances of common databases, Selenium web browsers, or anything else that can run in a Docker container.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Testcontainers\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "leocavalcante",
+            "email": "lc@leocavalcante.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.2"
+    }
+}
