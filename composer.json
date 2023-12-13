@@ -8,6 +8,11 @@
             "Testcontainers\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\Testcontainers\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "leocavalcante",
@@ -17,5 +22,9 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "friendsofphp/php-cs-fixer": "^3.41"
     }
 }
