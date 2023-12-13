@@ -1,3 +1,6 @@
+> [!NOTE]  
+> This project is not officially backed by the Testcontainers project... yet.
+
 # Testcontainers
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/opencodeco/testcontainers-php)
