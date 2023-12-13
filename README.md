@@ -1,5 +1,5 @@
 > [!NOTE]  
-> This project is not officially backed by the Testcontainers project... yet.
+> This project is not officially backed by the Testcontainers project.
 
 # Testcontainers
 
