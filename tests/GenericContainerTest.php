@@ -6,7 +6,7 @@ namespace Test\Testcontainers;
 
 use PHPUnit\Framework\TestCase;
 use Testcontainers\TestContainer;
-use Testcontainers\GenericTestContainer;
+use Testcontainers\GenericContainer;
 use Testcontainers\TestContainerException;
 
 final class GenericContainerTest extends TestCase
@@ -18,9 +18,9 @@ final class GenericContainerTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        self::$container = new GenericTestContainer('alpine');
+        self::$container = new GenericContainer('alpine');
         self::$container->withCommand(['tail', '-f', '/dev/null']);
-        self::$container->start();
+        self::$container->run();
     }
 
     /**
