@@ -27,7 +27,7 @@ class GenericContainer implements TestContainer
     /**
      * @throws TestContainerException
      */
-    public function run(): void
+    public function run(): self
     {
         $process = new Process([
             'docker', 'run', '--rm', '-d',
@@ -42,6 +42,8 @@ class GenericContainer implements TestContainer
         if (!$process->isSuccessful()) {
             throw TestContainerException::start($process->getErrorOutput());
         }
+
+        return $this;
     }
 
     /**
@@ -64,9 +66,10 @@ class GenericContainer implements TestContainer
     }
 
     /**
+     * @inheritDoc
      * @throws TestContainerException
      */
-    public function stop(): void
+    public function stop(): self
     {
         $process = new Process([
             'docker', 'stop',
@@ -78,6 +81,8 @@ class GenericContainer implements TestContainer
         if (!$process->isSuccessful()) {
             throw TestContainerException::stop($this->name, $process->getErrorOutput());
         }
+
+        return $this;
     }
 
     /**
@@ -125,7 +130,7 @@ class GenericContainer implements TestContainer
 
     public function withExposedPorts(string $port): self
     {
-        $this->exposedPorts[$port] = $port;
+        $this->exposedPorts[] = $port;
         return $this;
     }
 

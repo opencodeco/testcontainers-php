@@ -6,9 +6,15 @@ namespace Testcontainers;
 
 interface TestContainer
 {
-    public function run(): void;
+    /**
+     * @return $this
+     */
+    public function run(): self;
 
-    public function stop(): void;
+    /**
+     * @return $this
+     */
+    public function stop(): self;
 
     /**
      * @param array<string> $command
@@ -28,5 +34,8 @@ interface TestContainer
 
     public function getFirstMappedPort(): int;
 
+    /**
+     * @return $this
+     */
     public function withExposedPorts(string $port): self;
 }
