@@ -6,3 +6,13 @@ include:
   - docs
 
 baseUrl: https://opencodeco.github.io/testcontainers-php
+
+github:
+  user: opencodeco
+  repo: testcontainers-php
+
+menu:
+  items:
+    home:
+      text:
+      relativeUrl: index.html

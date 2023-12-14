@@ -1,3 +1,6 @@
+---
+currentMenu: home
+---
 # Testcontainers for PHP
 
 ## Getting started
