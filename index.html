@@ -48,9 +48,60 @@
                 
                 <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
                     <h1 id="testcontainers-for-php">Testcontainers for PHP</h1>
+<p>Testcontainers is a PHP library that supports PHPUnit tests, providing lightweight, throwaway instances of common databases, Selenium web browsers, or anything else that can run in a Docker container.</p>
 <h2 id="getting-started">Getting started</h2>
 <h3 id="installation">Installation</h3>
 <pre><code class="language-shell">composer require opencodeco/testcontainers</code></pre>
+<h3 id="usage">Usage</h3>
+<p>You can create containers using PHP, from a variety of modules, or just using <code>GenericContainer</code> and use them as actual infrastructure components.</p>
+<h4 id="example">Example</h4>
+<h5 id="hello-world">Hello, World!</h5>
+<pre><code class="language-php">$redis_container = (new \Testcontainers\GenericContainer('redis:alpine'))
+    -&gt;withExposedPorts('6379/tcp')
+    -&gt;run();
+
+$redis_client = new \Predis\Client([
+    'host' =&gt; $redis_container-&gt;getHost(),
+    'port' =&gt; $redis_container-&gt;getFirstMappedPort(),
+]);
+
+$redis_client-&gt;set('greetings', 'Hello, World!');
+echo $redis_client-&gt;get('greetings');</code></pre>
+<h5 id="phpunit">PHPUnit</h5>
+<p>Using the built-in Redis module.</p>
+<pre><code class="language-php">final class RedisContainerTest extends TestCase
+{
+    private static TestContainer $redisContainer;
+
+    /**
+     * @throws TestContainerException
+     */
+    public static function setUpBeforeClass(): void
+    {
+        self::$redisContainer = new RedisContainer();
+        self::$redisContainer-&gt;run();
+    }
+
+    /**
+     * @throws TestContainerException
+     */
+    public static function tearDownAfterClass(): void
+    {
+        self::$redisContainer-&gt;stop();
+    }
+
+    public function testConnectSetAndGet(): void
+    {
+        $redis_client = new Client([
+            'host' =&gt; self::$redisContainer-&gt;getHost(),
+            'port' =&gt; self::$redisContainer-&gt;getFirstMappedPort(),
+        ]);
+
+        $redis_client-&gt;set('testcontainers', 'php');
+
+        $this-&gt;assertSame('php', $redis_client-&gt;get('testcontainers'));
+    }
+}</code></pre>
                 </section>
 
             </div>
