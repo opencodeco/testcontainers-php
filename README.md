@@ -13,7 +13,15 @@
 
 ![Testcontainers logo](docs/logo.png)
 
-# [Read the documentation here](https://testcontainers.org)
+## Getting started
+
+### Installation
+
+```shell
+composer require opencodeco/testcontainers
+```
+
+[Read the documentation here](https://opencodeco.github.io/testcontainers-php).
 
 ## License
 
