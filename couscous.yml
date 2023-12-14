@@ -14,5 +14,5 @@ github:
 menu:
   items:
     home:
-      text:
+      text: Getting started
       relativeUrl: index.html
