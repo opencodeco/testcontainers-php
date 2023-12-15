@@ -58,7 +58,7 @@
 <h5 id="hello-world">Hello, World!</h5>
 <pre><code class="language-php">$redis_container = (new \Testcontainers\GenericContainer('redis:alpine'))
     -&gt;withExposedPorts('6379/tcp')
-    -&gt;run();
+    -&gt;start();
 
 $redis_client = new \Predis\Client([
     'host' =&gt; $redis_container-&gt;getHost(),
@@ -79,7 +79,7 @@ echo $redis_client-&gt;get('greetings');</code></pre>
     public static function setUpBeforeClass(): void
     {
         self::$redisContainer = new RedisContainer();
-        self::$redisContainer-&gt;run();
+        self::$redisContainer-&gt;start();
     }
 
     /**
