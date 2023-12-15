@@ -20,10 +20,11 @@ You can create containers using PHP, from a variety of modules, or just using `G
 #### Example
 
 ##### Hello, World!
+
 ```php
 $redis_container = (new \Testcontainers\GenericContainer('redis:alpine'))
     ->withExposedPorts('6379/tcp')
-    ->run();
+    ->start();
 
 $redis_client = new \Predis\Client([
     'host' => $redis_container->getHost(),
@@ -49,7 +50,7 @@ final class RedisContainerTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$redisContainer = new RedisContainer();
-        self::$redisContainer->run();
+        self::$redisContainer->start();
     }
 
     /**

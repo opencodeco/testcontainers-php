@@ -6,7 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $redis_container = (new \Testcontainers\GenericContainer('redis:alpine'))
     ->withExposedPorts('6379/tcp')
-    ->run();
+    ->start();
 
 $redis_client = new \Predis\Client([
     'host' => $redis_container->getHost(),
@@ -15,3 +15,5 @@ $redis_client = new \Predis\Client([
 
 $redis_client->set('greetings', 'Hello, World!');
 echo $redis_client->get('greetings');
+
+$redis_container->stop();

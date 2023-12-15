@@ -9,7 +9,7 @@ interface TestContainer
     /**
      * @return $this
      */
-    public function run(): self;
+    public function start(): self;
 
     /**
      * @return $this

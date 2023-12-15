@@ -8,10 +8,10 @@ use Testcontainers\GenericContainer;
 
 final class RedisContainer extends GenericContainer
 {
-    protected array $exposedPorts = ['6379/tcp'];
-
     public function __construct(string $image = 'redis:alpine')
     {
         parent::__construct($image);
+        $this->withExposedPorts('6379/tcp');
+
     }
 }

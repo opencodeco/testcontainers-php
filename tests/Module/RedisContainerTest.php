@@ -14,18 +14,12 @@ final class RedisContainerTest extends TestCase
 {
     private static TestContainer $redisContainer;
 
-    /**
-     * @throws TestContainerException
-     */
     public static function setUpBeforeClass(): void
     {
         self::$redisContainer = new RedisContainer();
-        self::$redisContainer->run();
+        self::$redisContainer->start();
     }
 
-    /**
-     * @throws TestContainerException
-     */
     public static function tearDownAfterClass(): void
     {
         self::$redisContainer->stop();
