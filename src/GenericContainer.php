@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Testcontainers;
 
+use Docker\API\Exception\ContainerCreateNotFoundException;
 use Docker\API\Model\ContainerConfigExposedPortsItem;
 use Docker\API\Model\ContainerCreateResponse;
 use Docker\API\Model\ContainersCreatePostBody;
@@ -22,7 +23,7 @@ class GenericContainer implements TestContainer
     private ContainerCreateResponse $container;
 
     public function __construct(
-        string $image,
+        private string $image,
     ) {
         $this->containerDefinition = new ContainersCreatePostBody();
         $this->containerDefinition->setImage($image);
@@ -30,8 +31,19 @@ class GenericContainer implements TestContainer
 
     public function start(): self
     {
-        $this->container = Testcontainers::getRuntime()
-            ->containerCreate($this->containerDefinition);
+        try {
+            $this->container = Testcontainers::getRuntime()
+                ->containerCreate($this->containerDefinition);
+
+        } catch (ContainerCreateNotFoundException) {
+            Testcontainers::getRuntime()
+                ->imageCreate(queryParameters: [
+                    'fromImage' => explode(':', $this->image)[0],
+                    'tag' => explode(':', $this->image)[1] ?? 'latest',
+                ]);
+
+            return $this->start();
+        }
 
         Testcontainers::getRuntime()
             ->containerStart($this->container->getId());
