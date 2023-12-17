@@ -21,14 +21,12 @@ final class GenericContainerTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        self::$container->stop();
+//        self::$container->stop();
     }
 
     public function testExec(): void
     {
-        $expected = uniqid();
-        $actual = self::$container->exec(['echo', $expected]);
-
-        $this->assertSame($expected, trim($actual));
+        $actual = self::$container->exec(['echo', 'testcontainers']);
+        $this->assertSame('testcontainers', $actual);
     }
 }

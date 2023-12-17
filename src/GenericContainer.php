@@ -11,14 +11,15 @@ use Docker\API\Model\ContainersIdExecPostBody;
 use Docker\API\Model\ContainersIdJsonGetResponse200;
 use Docker\API\Model\ExecIdStartPostBody;
 use Docker\API\Model\HostConfig;
+use Docker\API\Model\HostConfigLogConfig;
 use Docker\API\Model\PortBinding;
+use Docker\Docker;
 
 class GenericContainer implements TestContainer
 {
     private ContainersCreatePostBody $containerDefinition;
 
     private ContainerCreateResponse $container;
-
 
     public function __construct(
         string $image,
@@ -73,33 +74,20 @@ class GenericContainer implements TestContainer
 
     public function exec(array $command): string
     {
-        $request = (new ContainersIdExecPostBody())
+        $containerExec = (new ContainersIdExecPostBody())
             ->setCmd($command)
             ->setAttachStdout(true)
             ->setAttachStderr(true);
 
-        $response = Testcontainers::getRuntime()
-            ->containerExec($this->container->getId(), $request);
+        $exec = Testcontainers::getRuntime()
+            ->containerExec($this->container->getId(), $containerExec);
 
-        $rr = new ExecIdStartPostBody();
-        $rr->setDetach(false);
-        $rr->setTty(true);
+        $contents = Testcontainers::getRuntime()
+            ->execStart($exec->getId(), fetch: 'response')
+            ->getBody()
+            ->getContents();
 
-
-
-
-        $r = Testcontainers::getRuntime()
-            ->execStart($response->getId(), $rr);
-
-        $foo = Testcontainers::getRuntime()
-            ->execInspect($response->getId());
-
-
-        $a = Testcontainers::getRuntime()
-            ->containerAttach($this->container->getId());
-
-        var_dump($a->getBody()->getContents());
-        var_dump($foo);
+        return preg_replace('/[\x00-\x1F\x7F]/u', '', $contents);
     }
 
     public function withCommand(array $command): self
