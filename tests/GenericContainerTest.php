@@ -21,7 +21,7 @@ final class GenericContainerTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-//        self::$container->stop();
+        self::$container->stop();
     }
 
     public function testExec(): void
