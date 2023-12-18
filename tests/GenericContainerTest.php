@@ -27,6 +27,6 @@ final class GenericContainerTest extends TestCase
     public function testExec(): void
     {
         $actual = self::$container->exec(['echo', 'testcontainers']);
-        $this->assertSame('testcontainers', $actual);
+        self::assertSame('testcontainers', $actual);
     }
 }

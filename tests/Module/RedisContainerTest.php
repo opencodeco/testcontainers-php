@@ -34,6 +34,6 @@ final class RedisContainerTest extends TestCase
 
         $redis_client->set('testcontainers', 'php');
 
-        $this->assertSame('php', $redis_client->get('testcontainers'));
+        self::assertSame('php', $redis_client->get('testcontainers'));
     }
 }

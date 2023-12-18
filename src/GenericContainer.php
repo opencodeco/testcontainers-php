@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Testcontainers;
 
 use Docker\API\Exception\ContainerCreateNotFoundException;
+use Docker\API\Exception\ImageCreateNotFoundException;
 use Docker\API\Model\ContainerConfigExposedPortsItem;
 use Docker\API\Model\ContainerCreateResponse;
 use Docker\API\Model\ContainersCreatePostBody;
@@ -105,6 +106,12 @@ class GenericContainer implements TestContainer
     public function withCommand(array $command): self
     {
         $this->containerDefinition->setCmd($command);
+        return $this;
+    }
+
+    public function withEnv(array $env): self
+    {
+        $this->containerDefinition->setEnv($env);
         return $this;
     }
 
