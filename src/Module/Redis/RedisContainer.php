@@ -12,6 +12,5 @@ final class RedisContainer extends GenericContainer
     {
         parent::__construct($image);
         $this->withExposedPorts('6379/tcp');
-
     }
 }

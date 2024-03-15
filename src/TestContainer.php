@@ -18,7 +18,6 @@ interface TestContainer
 
     /**
      * @param array<string> $command
-     * @return string
      */
     public function exec(array $command): string;
 

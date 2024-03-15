@@ -7,6 +7,9 @@ namespace Test\Testcontainers\Module;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Module\MySql\MySqlContainer;
 
+/**
+ * @internal
+ */
 final class MySqlContainerTest extends TestCase
 {
     private static MySqlContainer $container;
@@ -19,17 +22,11 @@ final class MySqlContainerTest extends TestCase
 
     protected function tearDown(): void
     {
-        //self::$container->stop();
+        self::$container->stop();
     }
 
     public function testCRUD(): void
     {
-        echo sprintf(
-            'mysql:host=%s;port=%s',
-            self::$container->getHost(),
-            self::$container->getFirstMappedPort(),
-        );
-
         $pdo = self::$container->createPdo();
 
         self::assertNotFalse($pdo->exec('CREATE TABLE testcontainers (foo INT)'));

@@ -8,8 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Predis\Client;
 use Testcontainers\Module\Redis\RedisContainer;
 use Testcontainers\TestContainer;
-use Testcontainers\TestContainerException;
 
+/**
+ * @internal
+ */
 final class RedisContainerTest extends TestCase
 {
     private static TestContainer $redisContainer;

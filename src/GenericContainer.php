@@ -5,17 +5,13 @@ declare(strict_types=1);
 namespace Testcontainers;
 
 use Docker\API\Exception\ContainerCreateNotFoundException;
-use Docker\API\Exception\ImageCreateNotFoundException;
 use Docker\API\Model\ContainerConfigExposedPortsItem;
 use Docker\API\Model\ContainerCreateResponse;
 use Docker\API\Model\ContainersCreatePostBody;
 use Docker\API\Model\ContainersIdExecPostBody;
 use Docker\API\Model\ContainersIdJsonGetResponse200;
-use Docker\API\Model\ExecIdStartPostBody;
 use Docker\API\Model\HostConfig;
-use Docker\API\Model\HostConfigLogConfig;
 use Docker\API\Model\PortBinding;
-use Docker\Docker;
 
 class GenericContainer implements TestContainer
 {
@@ -24,7 +20,7 @@ class GenericContainer implements TestContainer
     private ContainerCreateResponse $container;
 
     public function __construct(
-        private string $image,
+        private readonly string $image,
     ) {
         $this->containerDefinition = new ContainersCreatePostBody();
         $this->containerDefinition->setImage($image);
@@ -35,7 +31,6 @@ class GenericContainer implements TestContainer
         try {
             $this->container = Testcontainers::getRuntime()
                 ->containerCreate($this->containerDefinition);
-
         } catch (ContainerCreateNotFoundException) {
             Testcontainers::getRuntime()
                 ->imageCreate(queryParameters: [

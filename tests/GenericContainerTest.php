@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Test\Testcontainers;
 
 use PHPUnit\Framework\TestCase;
-use Testcontainers\TestContainer;
 use Testcontainers\GenericContainer;
+use Testcontainers\TestContainer;
 
+/**
+ * @internal
+ */
 final class GenericContainerTest extends TestCase
 {
     private static TestContainer $container;

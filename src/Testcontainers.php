@@ -12,7 +12,7 @@ final class Testcontainers
 
     public static function getRuntime(): Docker
     {
-        if (!isset(self::$runtime)) {
+        if (! isset(self::$runtime)) {
             self::$runtime = Docker::create();
         }
 
