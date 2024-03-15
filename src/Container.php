@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Testcontainers;
 
-interface TestContainer
+interface Container
 {
     /**
      * @return $this
@@ -37,4 +37,25 @@ interface TestContainer
      * @return $this
      */
     public function withExposedPorts(string $port): self;
+
+    public function getImage(): string;
+
+    public function getId(): string;
+
+    public function withId(string $id): self;
+
+    /**
+     * @return array<string>
+     */
+    public function getExposedPorts(): array;
+
+    /**
+     * @return array<string>
+     */
+    public function getCommand(): array;
+
+    /**
+     * @return array<string>
+     */
+    public function getEnv(): array;
 }

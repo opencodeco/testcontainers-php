@@ -6,15 +6,15 @@ namespace Test\Testcontainers\Module;
 
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
+use Testcontainers\Container;
 use Testcontainers\Module\Redis\RedisContainer;
-use Testcontainers\TestContainer;
 
 /**
  * @internal
  */
 final class RedisContainerTest extends TestCase
 {
-    private static TestContainer $redisContainer;
+    private static Container $redisContainer;
 
     public static function setUpBeforeClass(): void
     {

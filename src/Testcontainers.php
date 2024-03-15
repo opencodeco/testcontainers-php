@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace Testcontainers;
 
-use Docker\Docker;
+use Testcontainers\Runtime\Docker;
 
 final class Testcontainers
 {
-    private static Docker $runtime;
+    private static Runtime $runtime;
 
-    public static function getRuntime(): Docker
+    public static function getRuntime(string $default = Docker::class): Runtime
     {
         if (! isset(self::$runtime)) {
-            self::$runtime = Docker::create();
+            return self::setRuntime(new $default());
         }
 
         return self::$runtime;
+    }
+
+    public static function setRuntime(Runtime $runtime): Runtime
+    {
+        return self::$runtime = $runtime;
     }
 }
