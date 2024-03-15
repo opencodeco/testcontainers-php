@@ -1,4 +1,4 @@
 {
   "name": "testcontainers-php",
-  image: "opencodeco/phpctl:php82"
+  "image": "opencodeco/phpctl:php82"
 }
