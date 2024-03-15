@@ -1,0 +1,4 @@
+{
+  "name": "testcontainers-php",
+  image: "opencodeco/phpctl:php82"
+}
