@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-return (new PhpCsFixer\Config())
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+
+return (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@PSR2' => true,
@@ -82,11 +85,7 @@ return (new PhpCsFixer\Config())
         'single_line_empty_body' => false,
     ])
     ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->exclude('public')
-            ->exclude('runtime')
-            ->exclude('vendor')
-            ->exclude('bin')
+        Finder::create()
             ->in(__DIR__)
     )
-    ->setUsingCache(false);
+    ->setUsingCache(true);
