@@ -29,6 +29,6 @@ See [LICENSE](LICENSE).
 
 ## Copyright
 
-Copyright (c) 2023 Leo Cavalcante and other authors.
+Copyright (c) 2023-2024 Leo Cavalcante and other authors.
 
 See [contributors](https://github.com/opencodeco/testcontainers-php/graphs/contributors) for all contributors.
