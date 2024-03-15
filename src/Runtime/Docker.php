@@ -40,7 +40,10 @@ final class Docker implements Runtime
 
             $container->withId($this->docker->containerCreate($body)->getId());
         } catch (ContainerCreateNotFoundException) {
-            $this->docker->imageCreate($container->getImage());
+            $this->docker->imageCreate(queryParameters: [
+                'fromImage' => explode(':', $container->getImage())[0],
+                'tag' => explode(':', $container->getImage())[1] ?? 'latest',
+            ]);
             return $this->create($container);
         }
 
