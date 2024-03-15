@@ -26,7 +26,7 @@ class GenericContainer implements TestContainer
         $this->containerDefinition->setImage($image);
     }
 
-    public function start(): self
+    public function start(int $wait = 5): self
     {
         try {
             $this->container = Testcontainers::getRuntime()
@@ -43,6 +43,8 @@ class GenericContainer implements TestContainer
 
         Testcontainers::getRuntime()
             ->containerStart($this->container->getId());
+
+        sleep($wait); // TODO: Properly wait for container to be ready
 
         return $this;
     }

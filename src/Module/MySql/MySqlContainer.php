@@ -37,10 +37,8 @@ final class MySqlContainer extends GenericContainer
         return new PDO($this->getDsn(), $this->username, $this->password);
     }
 
-    public function start(): self
+    public function start(int $wait = 15): self
     {
-        parent::start();
-        sleep(15); // TODO: Properly wait for MySQL to be ready
-        return $this;
+        return parent::start($wait); // TODO: Properly wait for MySQL to be ready
     }
 }
