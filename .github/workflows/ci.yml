@@ -18,27 +18,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: shivammathur/setup-php@v2
+    - uses: devcontainers/ci@v0.3
+      name: Pre-build image and run make ci-build in dev container
       with:
-        php-version: ${{ matrix.php-version }}
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-
-    - name: Run linter
-      run: composer lint -- --dry-run --diff
-
-    - name: Run test suite
-      run: composer test
+        imageName: ghcr.io/opencodeco/testcontainers-php-devcontainer
+        cacheFrom: ghcr.io/opencodeco/testcontainers-php-devcontainer
+        push: always
+        runCmd: composer test
