@@ -1,6 +1,6 @@
 {
   "name": "testcontainers-php",
-  "image": "opencodeco/phpctl:php-debian",
+  "image": "opencodeco/phpctl:php83-devcontainers",
   "postCreateCommand": "composer install",
   "features": {
     "ghcr.io/devcontainers/features/sshd:1": {},
