@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [ "main" ]
@@ -10,12 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version: ['8.2', '8.3']
-
     steps:
     - uses: actions/checkout@v3
     - uses: devcontainers/ci@v0.3
@@ -23,5 +18,5 @@ jobs:
       with:
         imageName: ghcr.io/opencodeco/testcontainers-php-devcontainer
         cacheFrom: ghcr.io/opencodeco/testcontainers-php-devcontainer
-        push: always
+        push: never
         runCmd: composer test
