@@ -10,6 +10,8 @@ use Docker\API\Model\ContainersCreatePostBody;
 use Docker\API\Model\ContainersIdExecPostBody;
 use Docker\API\Model\HostConfig;
 use Docker\API\Model\PortBinding;
+use Docker\Docker as DockerClient;
+use Http\Client\Socket\Exception\ConnectionException;
 use Testcontainers\Container;
 use Testcontainers\Inspection;
 use Testcontainers\Runtime;
@@ -17,9 +19,25 @@ use Testcontainers\Runtime;
 final class Docker implements Runtime
 {
     public function __construct(
-        private ?\Docker\Docker $docker = null,
+        private ?DockerClient $docker = null,
     ) {
-        $this->docker ??= \Docker\Docker::create();
+    }
+
+    public function dockerClient(): DockerClient
+    {
+        if (! isset($this->docker)) {
+            try {
+                $this->docker = DockerClient::create();
+            } catch (ConnectionException $exception) {
+                $target = $exception->getRequest()->getUri();
+                throw new \Testcontainers\Exception(
+                    "Could not connect to docker daemon",
+                    previous: $exception,
+                );
+            }
+        }
+
+        return $this->docker;
     }
 
     public function create(Container $container): self
@@ -38,9 +56,9 @@ final class Docker implements Runtime
             $body->setCmd($container->getCommand());
             $body->setEnv($container->getEnv());
 
-            $container->withId($this->docker->containerCreate($body)->getId());
+            $container->withId($this->dockerClient()->containerCreate($body)->getId());
         } catch (ContainerCreateNotFoundException) {
-            $this->docker->imageCreate(queryParameters: [
+            $this->dockerClient()->imageCreate(queryParameters: [
                 'fromImage' => explode(':', $container->getImage())[0],
                 'tag' => explode(':', $container->getImage())[1] ?? 'latest',
             ]);
@@ -52,20 +70,20 @@ final class Docker implements Runtime
 
     public function start(Container $container): self
     {
-        $this->docker->containerStart($container->getId());
+        $this->dockerClient()->containerStart($container->getId());
         return $this;
     }
 
     public function stop(Container $container): self
     {
-        $this->docker->containerStop($container->getId());
-        $this->docker->containerDelete($container->getId());
+        $this->dockerClient()->containerStop($container->getId());
+        $this->dockerClient()->containerDelete($container->getId());
         return $this;
     }
 
     public function inspect(Container $container): Inspection
     {
-        $response = $this->docker->containerInspect($container->getId());
+        $response = $this->dockerClient()->containerInspect($container->getId());
         $settings = $response->getNetworkSettings();
 
         $ports = [];
@@ -90,9 +108,9 @@ final class Docker implements Runtime
             ->setAttachStdout(true)
             ->setAttachStderr(true);
 
-        $exec = $this->docker->containerExec($container->getId(), $containerExec);
+        $exec = $this->dockerClient()->containerExec($container->getId(), $containerExec);
 
-        $contents = $this->docker
+        $contents = $this->dockerClient()
             ->execStart($exec->getId(), fetch: 'response')
             ->getBody()
             ->getContents();
