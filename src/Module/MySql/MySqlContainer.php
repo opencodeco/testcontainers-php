@@ -27,6 +27,15 @@ final class MySqlContainer extends GenericContainer
             ]);
     }
 
+    public function getHost() : string
+    {
+        $host = parent::getHost();
+
+        // depending on compile flags, mysql tries to connect on a local socket when
+        // given 'localhost' as host so we need to correct it
+        return $host == 'localhost' ? '127.0.0.1' : $host;
+    }
+
     public function getDsn(): string
     {
         return "mysql:host={$this->getHost()};port={$this->getFirstMappedPort()};dbname={$this->database}";
