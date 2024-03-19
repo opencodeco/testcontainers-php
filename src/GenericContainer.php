@@ -72,7 +72,18 @@ class GenericContainer implements Container
 
     public function getHost(): string
     {
+        // @todo implement env vars like DOCKER_HOST
+
+        if (!$this->insideContainer()) {
+           return 'localhost';
+        }
+
         return $this->inspect()->gateway;
+    }
+
+    private function insideContainer(): bool
+    {
+        return file_exists("/.dockerenv");
     }
 
     public function getMappedPort(string $port): int
