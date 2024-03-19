@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Test\Testcontainers\Module;
 
-use AMQPChannel;
-use AMQPEnvelope;
-use AMQPExchange;
-use AMQPQueue;
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
+use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\TestCase;
 use Testcontainers\Module\RabbitMQ\RabbitMQContainer;
 
@@ -18,33 +18,23 @@ final class RabbitMQContainerTest extends TestCase
 {
     private static RabbitMQContainer $container;
 
-    private AMQPExchange $exchange;
-
-    private AMQPQueue $queue;
+    private AMQPChannel $channel;
 
     public static function setUpBeforeClass(): void
     {
-        if (extension_loaded('amqp') === false) {
-            self::markTestSkipped('The amqp extension is not installed/enabled.');
-        }
-
         self::$container = new RabbitMQContainer();
         self::$container->start();
     }
 
-    protected function tearDown(): void
+    public static function tearDownAfterClass(): void
     {
         self::$container->stop();
     }
 
     public function testCreateExchange(): void
     {
-        $this->exchange = new AMQPExchange($this->getChannel());
-        $this->exchange->setName('testExchange');
-        $this->exchange->setFlags(AMQP_DURABLE);
-        $this->exchange->setType(AMQP_EX_TYPE_DIRECT);
-
-        self::assertTrue($this->exchange->declareExchange());
+        $channel = $this->getChannel();
+        self::assertNull($channel->exchange_declare('testExchange', AMQPExchangeType::DIRECT));
     }
 
     /**
@@ -52,11 +42,10 @@ final class RabbitMQContainerTest extends TestCase
      */
     public function testCreateAndBindQueue(): void
     {
-        $this->queue = new AMQPQueue($channel);
-        $this->queue->setName('testQueue');
-        $this->queue->setFlags(AMQP_DURABLE);
+        $channel = $this->getChannel();
 
-        self::assertSame(0, $this->queue->declareQueue());
+        self::assertEquals(['testQueue', 0, 0], $channel->queue_declare('testQueue'));
+        self::assertNull($channel->queue_bind('testQueue', 'testExchange'));
     }
 
     /**
@@ -65,21 +54,26 @@ final class RabbitMQContainerTest extends TestCase
      */
     public function testPublishAndConsume(): void
     {
-        self::assertTrue($this->exchange->publish('testMessage', 'routingKey'));
+        $channel = $this->getChannel();
+        $originalMessage = new AMQPMessage('test message', ['content_type' => 'text/plain']);
 
-        $message = $this->queue->get();
-        self::assertInstanceOf(AMQPEnvelope::class, $message);
-        self::assertSame('testMessage', $message->getBody());
-        self::assertSame('routingKey', $message->getRoutingKey());
+        $channel->basic_publish($originalMessage, 'testExchange');
+
+        $receivedMessage = $channel->basic_get('testQueue');
+
+        self::assertInstanceOf(AMQPMessage::class, $receivedMessage);
+        self::assertSame($originalMessage->getBody(), $receivedMessage->getBody());
     }
 
     private function getChannel(): AMQPChannel
     {
-        $amqp = self::$container->createAmqp();
-        if ($amqp->isConnected() === false) {
-            $amqp->connect();
-        }
+        $connection = new AMQPStreamConnection(
+            self::$container->getHost(),
+            self::$container->getFirstMappedPort(),
+            self::$container->user,
+            self::$container->pass
+        );
 
-        return new AMQPChannel($amqp);
+        return $connection->channel();
     }
 }
