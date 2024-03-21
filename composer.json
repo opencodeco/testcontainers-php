@@ -32,10 +32,6 @@
         "php-amqplib/php-amqplib": "^3.6",
         "predis/predis": "^2.2"
     },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "lint": "vendor/bin/php-cs-fixer fix ."
-    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true
