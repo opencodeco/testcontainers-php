@@ -13,4 +13,4 @@ jobs:
     - uses: devcontainers/ci@v0.3
       name: Test
       with:
-        runCmd: composer test
+        runCmd: make test
