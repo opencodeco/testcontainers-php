@@ -1,7 +1,7 @@
 {
   "name": "testcontainers-php",
   "image": "opencodeco/phpctl:php83-devcontainer",
-  "postCreateCommand": "composer install",
+  "postCreateCommand": "make",
   "features": {
     "ghcr.io/devcontainers/features/sshd:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
