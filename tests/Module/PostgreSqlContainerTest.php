@@ -9,6 +9,7 @@ use Testcontainers\Module\PostgreSql\PostgreSqlContainer;
 
 /**
  * @internal
+ * @requires extension pdo_pgsql
  */
 final class PostgreSqlContainerTest extends TestCase
 {
@@ -16,12 +17,6 @@ final class PostgreSqlContainerTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        if (extension_loaded('pdo_pgsql') === false) {
-            self::markTestSkipped('The pdo_pgsql extension is not installed/enabled.');
-
-            return;
-        }
-
         self::$container = new PostgreSqlContainer();
         self::$container->start();
     }

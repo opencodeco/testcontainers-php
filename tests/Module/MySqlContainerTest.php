@@ -9,6 +9,7 @@ use Testcontainers\Module\MySql\MySqlContainer;
 
 /**
  * @internal
+ * @requires extension pdo_mysql
  */
 final class MySqlContainerTest extends TestCase
 {
@@ -16,12 +17,6 @@ final class MySqlContainerTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        if (extension_loaded('pdo_mysql') === false) {
-            self::markTestSkipped('The pdo_mysql extension is not installed/enabled.');
-
-            return;
-        }
-
         self::$container = new MySqlContainer();
         self::$container->start();
     }
