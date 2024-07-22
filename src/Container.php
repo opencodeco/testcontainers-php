@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Testcontainers;
 
+use Testcontainers\Wait\WaitStrategy;
+
 interface Container
 {
     /**
@@ -58,4 +60,6 @@ interface Container
      * @return array<string>
      */
     public function getEnv(): array;
+
+    public function waitingFor(WaitStrategy $waitStrategy): self;
 }

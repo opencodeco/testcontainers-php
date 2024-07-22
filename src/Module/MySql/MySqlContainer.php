@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Testcontainers\Module\MySql;
 
-use PDO;
-use Testcontainers\GenericContainer;
+use Testcontainers\Module\Pdo\PdoDatabaseContainer;
 
-final class MySqlContainer extends GenericContainer
+final class MySqlContainer extends PdoDatabaseContainer
 {
     public function __construct(
         string $image = 'mysql',
@@ -27,7 +26,7 @@ final class MySqlContainer extends GenericContainer
             ]);
     }
 
-    public function getHost() : string
+    public function getHost(): string
     {
         $host = parent::getHost();
 
@@ -36,18 +35,8 @@ final class MySqlContainer extends GenericContainer
         return $host == 'localhost' ? '127.0.0.1' : $host;
     }
 
-    public function getDsn(): string
+    protected function getDriverName(): string
     {
-        return "mysql:host={$this->getHost()};port={$this->getFirstMappedPort()};dbname={$this->database}";
-    }
-
-    public function createPdo(): PDO
-    {
-        return new PDO($this->getDsn(), $this->username, $this->password);
-    }
-
-    public function start(int $wait = 15): self
-    {
-        return parent::start($wait); // TODO: Properly wait for MySQL to be ready
+        return 'mysql';
     }
 }
