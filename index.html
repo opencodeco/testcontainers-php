@@ -54,6 +54,10 @@
 <pre><code class="language-shell">composer require opencodeco/testcontainers</code></pre>
 <h3 id="usage">Usage</h3>
 <p>You can create containers using PHP, from a variety of modules, or just using <code>GenericContainer</code> and use them as actual infrastructure components.</p>
+<blockquote>
+<p>[!NOTE]
+If you are using Docker Desktop and would like to run testcontainers inside a container, you need to configure the <code>TESTCONTAINERS_HOST_OVERRIDE</code> environment variable to use the special DNS name <code>host.docker.internal</code> for accessing the host from within a container, which is provided by Docker Desktop.</p>
+</blockquote>
 <h4 id="example">Example</h4>
 <h5 id="hello-world">Hello, World!</h5>
 <pre><code class="language-php">$redis_container = (new \Testcontainers\GenericContainer('redis:alpine'))
