@@ -17,6 +17,9 @@ composer require opencodeco/testcontainers
 
 You can create containers using PHP, from a variety of modules, or just using `GenericContainer` and use them as actual infrastructure components.
 
+> [!NOTE]
+> If you are using Docker Desktop and would like to run testcontainers inside a container, you need to configure the ```TESTCONTAINERS_HOST_OVERRIDE``` environment variable to use the special DNS name ```host.docker.internal``` for accessing the host from within a container, which is provided by Docker Desktop.
+
 #### Example
 
 ##### Hello, World!

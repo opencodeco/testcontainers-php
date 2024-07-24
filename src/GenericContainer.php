@@ -72,7 +72,10 @@ class GenericContainer implements Container
 
     public function getHost(): string
     {
-        // @todo implement env vars like DOCKER_HOST
+        $hostOverride = getenv('TESTCONTAINERS_HOST_OVERRIDE');
+        if ($hostOverride !== false) {
+            return $hostOverride;
+        }
 
         if (!$this->insideContainer()) {
            return 'localhost';
