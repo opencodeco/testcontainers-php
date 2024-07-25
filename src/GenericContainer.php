@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Testcontainers;
 
+use Testcontainers\Wait\WaitStrategy;
+use Testcontainers\Wait\WaitStrategyTarget;
+
 class GenericContainer implements Container
 {
     private string $id;
@@ -17,11 +20,14 @@ class GenericContainer implements Container
     /** @var array<string> */
     private array $env = [];
 
+    private WaitStrategy $waitStrategy;
+
     public function __construct(
         private readonly string $image,
         private ?Runtime $runtime = null,
     ) {
         $this->runtime ??= Testcontainers::getRuntime();
+        $this->waitStrategy = Wait::defaultWaitStrategy();
     }
 
     public function getImage(): string
@@ -29,10 +35,10 @@ class GenericContainer implements Container
         return $this->image;
     }
 
-    public function start(int $wait = 5): self
+    public function start(): self
     {
         $this->runtime->create($this)->start($this);
-        sleep($wait); // TODO: Properly wait for container to be ready
+        $this->waitUntilReady();
         return $this;
     }
 
@@ -124,5 +130,16 @@ class GenericContainer implements Container
     public function getEnv(): array
     {
         return $this->env;
+    }
+
+    public function waitingFor(WaitStrategy $waitStrategy): self
+    {
+        $this->waitStrategy = $waitStrategy;
+        return $this;
+    }
+
+    protected function waitUntilReady(): void
+    {
+        $this->waitStrategy?->waitUntilReady(new WaitStrategyTarget($this, $this->runtime));
     }
 }

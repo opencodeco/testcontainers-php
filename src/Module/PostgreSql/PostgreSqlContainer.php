@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Testcontainers\Module\PostgreSql;
 
-use PDO;
-use Testcontainers\GenericContainer;
+use Testcontainers\Module\Pdo\PdoDatabaseContainer;
+use Testcontainers\Wait;
 
-final class PostgreSqlContainer extends GenericContainer
+final class PostgreSqlContainer extends PdoDatabaseContainer
 {
     public function __construct(
         string $image = 'postgres',
@@ -23,21 +23,12 @@ final class PostgreSqlContainer extends GenericContainer
                 "POSTGRES_USER={$this->username}",
                 "POSTGRES_PASSWORD={$this->password}",
                 "POSTGRES_DB={$this->database}",
-            ]);
+            ])
+            ->waitingFor(Wait::forLogMessage('database system is ready to accept connections'));
     }
 
-    public function getDsn(): string
+    protected function getDriverName(): string
     {
-        return "pgsql:host={$this->getHost()};port={$this->getFirstMappedPort()};dbname={$this->database}";
-    }
-
-    public function createPdo(): PDO
-    {
-        return new PDO($this->getDsn(), $this->username, $this->password);
-    }
-
-    public function start(int $wait = 15): self
-    {
-        return parent::start($wait); // TODO: Properly wait for PostgreSQL to be ready
+        return 'pgsql';
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Testcontainers\Module\RabbitMQ;
 
 use Testcontainers\GenericContainer;
+use Testcontainers\Wait;
 
 final class RabbitMQContainer extends GenericContainer
 {
@@ -20,6 +21,7 @@ final class RabbitMQContainer extends GenericContainer
             ->withEnv([
                 'RABBITMQ_DEFAULT_USER' => $this->user,
                 'RABBITMQ_DEFAULT_PASS' => $this->pass,
-            ]);
+            ])
+            ->waitingFor(Wait::forLogMessage('Server startup complete'));
     }
 }
